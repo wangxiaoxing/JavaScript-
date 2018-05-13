@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    function Person(name) {
+        this.name=name;
+    }
+    Person.prototype.getName=function () {
+        return this.name;
+    }
+    var objectFactory=function () {
+        var obj=new Object(),
+            //这里得到的是Person函数对象
+        Constructor=[].shift.call(arguments);
+        //注意这里是__proto__，不是_proto_!!!!
+        obj.__proto__=Constructor.prototype;
+        var ret=Constructor.apply(obj,arguments);
+        return typeof ret==='object'?ret:obj;
+    };
+    var a=objectFactory(Person,'sven');
+    console.log(a);
+    console.log(a.name);
+    console.log(a.getName());
+    console.log(Object.getPrototypeOf(a)===Person.prototype);
+
+    //用new操作符新建对象
+    var b=new Person('sven');
+    console.log(b);
+    console.log(b.getName());
+    console.log(a===b);
+</script>
+</body>
+</html>
