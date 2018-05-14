@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    Function.prototype.bind=function(){
+        var self=this,   //调用bind的那个函数
+            context=[].shift.call(arguments), //context=obj
+            args=[].slice.call(arguments);  //args=[1,2]
+        return function () {
+            return self.apply(context,[].concat.call(args,[].slice.call(arguments))); //这里的arguments是指[3,4]
+        }
+    };
+    var obj={
+        name:'sven'
+    };
+    var func=function (a,b,c,d) {
+        alert(this.name);
+        alert([a,b,c,d]);
+    }.bind(obj,1,2);
+    func(3,4);
+</script>
+</body>
+</html>
