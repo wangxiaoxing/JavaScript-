@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    //创建唯一的div节点（透明的单例模式）
+    var CreateDiv=(function () {
+        var instance;
+        var CreateDiv=function (html) {
+            if(instance){
+                return instance;
+            }
+            this.html=html;
+            console.log(this===a);
+            this.init();
+            return instance=this;
+        };
+        CreateDiv.prototype.init=function () {
+            var div=document.createElement('div');
+            div.innerHTML=this.html;
+            document.body.appendChild(div);
+        };
+        return CreateDiv;
+    })();
+    var a=new CreateDiv('sven1');
+    var b=new CreateDiv('sven2');
+    console.log(a);
+    console.log(b);
+    console.log(a===b);
+
+    //用代理实现单例模式
+    //普通的创建div的类
+    var CreateDiv=function (html) {
+        this.html=html;
+        this.init();
+    };
+    CreateDiv.prototype.init=function () {
+        var div=document.createElement('div');
+        div.innerHTML=this.html;
+        document.body.appendChild(div);
+    };
+    //引入代理类
+    var ProxySingleCreateDiv=(function () {
+        var instance;
+        return function (html) {
+            if(!instance){
+                instance=new CreateDiv(html);
+            }
+            return instance;
+        }
+    })();
+
+    var c=new ProxySingleCreateDiv('sven1');
+    var d=new ProxySingleCreateDiv('sven2');
+    console.log(c===d);
+
+    //js中的单例模式可以依靠全局变量实现
+    //动态创建命名空间
+    var MyApp={};
+    MyApp.namespace=function (name) {
+        var parts=name.split('.');
+        var current=MyApp;
+        for(var i in parts){
+            if(!current[parts[i]]){
+                current[parts[i]]={};
+            }
+            current=current[parts[i]];
+        }
+    };
+    MyApp.namespace('event');
+    MyApp.namespace('dom.style');
+    console.log(MyApp);
+
+    //使用闭包封装私有变量
+    var user=(function () {
+        var _name='sven',
+            _age=29;
+        return{
+            getUserInfo:function () {
+                return _name+'-'+_age;
+            }
+        }
+    })();
+    console.log(user);
+</script>
+</body>
+</html>
